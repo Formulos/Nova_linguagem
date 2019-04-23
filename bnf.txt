@@ -15,11 +15,9 @@
 
 <string>
 
-<unsigned number> ::= <unsigned integer> | <unsigned real>
+<unsigned number> ::= <unsigned integer>
 
 <unsigned integer> ::= <digit> {<digit>}
-
-<unsigned real> ::= <unsigned integer> . <unsigned integer> | <unsigned integer> . <unsigned integer> E <scale factor>|
 
 <unsigned integer> E <scale factor>
 
