@@ -10,107 +10,68 @@ extern "C" int yywrap() { }
 %%
 
 [ \t\n]                 ;
-[a-zA-Z_][a-zA-Z0-9_]*  SAVE_TOKEN; return TIDENTIFIER;
-[0-9]+.[0-9]*           SAVE_TOKEN; return TDOUBLE;
-[0-9]+                  SAVE_TOKEN; return TINTEGER;
+[a-zA-Z_][a-zA-Z0-9_]*  {return tk_id;};
+[0-9]+      			{return tk_int;}
 
+"and"					{return tk_and ;}
+"begin"				    {return tk_begin;}
+"div"					{return tk_div ;}
+"do"				    {return tk_do ;}
+"else"				    {return tk_else ;}
+"end"					{return tk_end ;}
+"false"				    {return tk_false;}
+"for"					{return tk_for ;}
+"func"				    {return tk_func ;}
+"function"				{return tk_function ;}
+"if"				    {return tk_if ;}
+"integer"				{return tk_integer ;}
+"label"				    {return tk_label ;}
+"main"				    {return tk_main ;}
+"nil"					{return tk_nil ;} !!
+"not"					{return tk_not;}
+"of"				    {return tk_of ;}
+"or"				    {return tk_or ;}
+"procedure"				{return tk_procedure ;}
+"program"				{return tk_program ;}
+"set"					{return tk_set ;}
+"string"				{return tk_string ;}
+"then"				    {return tk_then ;}
+"to"				    {return tk_to ;}
+"type"				    {return tk_type ;}
+"true"				    {return tk_true;}
+"until"				    {return tk_until ;}
+"uses"				    {return tk_uses ;}
+"var"					{return tk_var ;}
+"while"				    {return tk_while ;}
+"boolean"               {return tk_boolean;}
 
-and									return TOKEN (tk_and );
-array								return TOKEN (tk_array );
-begin								return TOKEN (tk_begin);
-case								return TOKEN (tk_case );
-const								return TOKEN (tk_const );
-div									return TOKEN (tk_div );
-do									return TOKEN (tk_do );
-else								return TOKEN (tk_else );
-end									return TOKEN (tk_end );
-false								return TOKEN (tk_false);
-file								return TOKEN (tk_file );
-for									return TOKEN (tk_for );
-func								return TOKEN (tk_func );
-function							return TOKEN (tk_function );
-if									return TOKEN (tk_if );
-in									return TOKEN (tk_in );
-integer								return TOKEN (tk_integer );
-interrupt							return TOKEN (tk_interrupt );
-label								return TOKEN (tk_label );
-main								return TOKEN (tk_main );
-mod									return TOKEN (tk_mod );
-nil									return TOKEN (tk_nil );
-nit									return TOKEN (tk_nit );
-not									return TOKEN (tk_not);
-of									return TOKEN (tk_of );
-or									return TOKEN (tk_or );
-packed								return TOKEN (tk_packed );
-procedure							return TOKEN (tk_procedure );
-progr								return TOKEN (tk_progr );
-program								return TOKEN (tk_program );
-record								return TOKEN (tk_record );
-repeat								return TOKEN (tk_repeat );
-set									return TOKEN (tk_set );
-shl									return TOKEN (tk_shl );
-shr									return TOKEN (tk_shr );
-string								return TOKEN (tk_string );
-then								return TOKEN (tk_then );
-to									return TOKEN (tk_to );
-type								return TOKEN (tk_type );
-true								return TOKEN (tk_true);
-unit								return TOKEN (tk_unit );
-until								return TOKEN (tk_until );
-uses								return TOKEN (tk_uses );
-var									return TOKEN (tk_var );
-while								return TOKEN (tk_while );
-with								return TOKEN (tk_with );
-xor									return TOKEN (tk_xor );
-boolean                             return TOKEN (tk_boolean);
+"over"                  {returntk_over;}
+"out"                   {returntk_out;}
 
-over                                return TOKEN(tk_over);
-out                                 return TOKEN(tk_out);
+"*"						{return tk_times;}
+"+"						{return tk_plus;}
+"-"						{return tk_minus;}
+"/"						{return tk_division;}
+"%"						{return tk_mod;}
 
-"*"									return TOKEN (tk_times);
-"+"									return TOKEN (tk_plus);
-"-"									return TOKEN (tk_minus);
-"/"									return TOKEN (tk_division);
-"%"									return TOKEN (tk_mod);
+"="						{return tk_equal;} 
+"("						{return tk_openbrac;}
+")"						{return tk_closebrac;}
+"["						{return tk_openclasp;}
+"]"						{return tk_closeclasp;}
+","						{return tk_comma;}
+":"						{return tk_twopoints;}
+";"					    {return tk_dot_comma;}
+">"						{return tk_bigger;}
+"<"						{return tk_smaller;}
+">="					{return tk_greter_equal;}
+"<="					{return tk_smaller_equal;}
+"<>"					{return tk_different;}
+":="					{return tk_assigment;}
+"."						{return tk_dot;}
+".."					{return tk_dot_dot;}
+[ \t]					;
 
-[0-9]+      						return TOKEN (tk_int);
-
-"="									return TOKEN (tk_equal); 
-"("									return TOKEN (tk_openbrac);
-")"								    return TOKEN (tk_closebrac);
-"["									return TOKEN (tk_openclasp);
-"]"									return TOKEN (tk_closeclasp);
-","									return TOKEN (tk_comma);
-":"									return TOKEN (tk_twopoints);
-";"								    return TOKEN (tk_dot_comma);
-">"									return TOKEN (tk_bigger);
-"<"									return TOKEN (tk_smaller);
-">="								return TOKEN (tk_greter_equal);
-"<="								return TOKEN (tk_smaller_equal);
-"<>"								return TOKEN (tk_different);
-":="								return TOKEN (tk_assigment);
-"."									return TOKEN (tk_dot);
-".."								return TOKEN (tk_dot_dot);
-[ \t]								;
-
-
-"="                     return TOKEN(TEQUAL);
-"=="                    return TOKEN(TCEQ);
-"!="                    return TOKEN(TCNE);
-"<"                     return TOKEN(TCLT);
-"<="                    return TOKEN(TCLE);
-">"                     return TOKEN(TCGT);
-">="                    return TOKEN(TCGE);
-"("                     return TOKEN(TLPAREN);
-")"                     return TOKEN(TRPAREN);
-""                     return TOKEN(TLBRACE);
-""                     return TOKEN(TRBRACE);
-"."                     return TOKEN(TDOT);
-","                     return TOKEN(TCOMMA);
-"+"                     return TOKEN(TPLUS);
-"-"                     return TOKEN(TMINUS);
-"*"                     return TOKEN(TMUL);
-"/"                     return TOKEN(TDIV);
 .                       printf("Unknown token!n"); yyterminate();
 
 %%
