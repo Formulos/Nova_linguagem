@@ -3,19 +3,16 @@
 #include "node.h"
 #include "parser.hpp"
 #define SAVE_TOKEN yylval.string = new std::string(yytext, yyleng)
-#define TOKEN(t) (yylval.token = t)
+//#define TOKEN(t) (yylval.token = t)
 extern "C" int yywrap() { }
 %}
 
 %%
 
 [ \t\n]                 ;
-[a-zA-Z_][a-zA-Z0-9_]*  {return tk_id;};
-[0-9]+      			{return tk_int;}
-
-"and"					{return tk_and ;}
 "begin"				    {return tk_begin;}
-"div"					{return tk_div ;}
+"program"				{return tk_program ;}
+"and"					{return tk_and ;}
 "do"				    {return tk_do ;}
 "else"				    {return tk_else ;}
 "end"					{return tk_end ;}
@@ -25,18 +22,14 @@ extern "C" int yywrap() { }
 "function"				{return tk_function ;}
 "if"				    {return tk_if ;}
 "integer"				{return tk_integer ;}
-"label"				    {return tk_label ;}
 "main"				    {return tk_main ;}
 "nil"					{return tk_nil ;} !!
 "not"					{return tk_not;}
 "of"				    {return tk_of ;}
 "or"				    {return tk_or ;}
 "procedure"				{return tk_procedure ;}
-"program"				{return tk_program ;}
-"set"					{return tk_set ;}
 "string"				{return tk_string ;}
 "then"				    {return tk_then ;}
-"to"				    {return tk_to ;}
 "type"				    {return tk_type ;}
 "true"				    {return tk_true;}
 "until"				    {return tk_until ;}
@@ -45,8 +38,8 @@ extern "C" int yywrap() { }
 "while"				    {return tk_while ;}
 "boolean"               {return tk_boolean;}
 
-"over"                  {returntk_over;}
-"out"                   {returntk_out;}
+"over"                  {return tk_over;}
+"out"                   {return tk_out;}
 
 "*"						{return tk_times;}
 "+"						{return tk_plus;}
@@ -70,7 +63,10 @@ extern "C" int yywrap() { }
 ":="					{return tk_assigment;}
 "."						{return tk_dot;}
 ".."					{return tk_dot_dot;}
-[ \t]					;
+
+
+[a-zA-Z_][a-zA-Z0-9_]*  {SAVE_TOKEN,return tk_id;};
+[0-9]+      			{SAVE_TOKEN,return tk_int;}
 
 .                       printf("Unknown token!n"); yyterminate();
 
