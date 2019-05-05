@@ -52,7 +52,7 @@
 
                     <unlabelled statement> ::= <simple statement> | <structured statement>
 
-                        <simple statement> ::= <assignment statement> | <procedure statement> |  <empty statement>
+                        <simple statement> ::= <assignment statement> | <procedure statement> |  <empty>
 
                             <assignment statement> ::= <variable> ":=" <expression> | <function identifier> := <expression>
 
@@ -62,10 +62,12 @@
                                 <function identifier> ::= <identifier>
 
                                 <expression> ::= <simple expression> | <simple expression> <relational operator> <simple expression>
-
-                                    <relational operator> ::= = | <> | < | <= | >= | > | in
+                                    //does not have in
+                                    <relational operator> ::= "=" | "<>" | "<" | "<=" | ">=" | ">"
 
                                     <simple expression> ::= <term> | <sign> <term>| <simple expression> <adding operator> <term>
+
+                                        <sign> ::= + | -
 
                                         <adding operator> ::= + | - | or
 
@@ -79,3 +81,19 @@
                         <procedure statement> ::= <identifier> | <identifier> (<actual parameter> {, <actual parameter> })
 
                             <actual parameter> ::= <expression> | <variable> | <identifier>
+
+                        <empty> ::=
+
+                    <structured statement> ::= <compound statement> | <conditional statement> | <repetitive statement>
+
+                        <compound statement> ::= "begin" <statement> {; <statement> } "end";
+
+                        <conditional statement> ::= <if statement>
+
+                            <if statement> ::= "if" <expression> "then" <statement> | "if" <expression> "then" <statement> "else" <statement>
+                        
+                        //does not have "reapeat" or "for"
+                        <repetitive statement> ::= <while statement> 
+
+                            <while statement> ::= "while" <expression> "do" <statement>
+                    
