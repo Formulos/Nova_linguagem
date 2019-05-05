@@ -17,23 +17,16 @@ extern "C" int yywrap() { }
 "else"				    {return tk_else ;}
 "end"					{return tk_end ;}
 "false"				    {return tk_false;}
-"for"					{return tk_for ;}
-"func"				    {return tk_func ;}
-"function"				{return tk_function ;}
 "if"				    {return tk_if ;}
 "integer"				{return tk_integer ;}
 "main"				    {return tk_main ;}
-"nil"					{return tk_nil ;} !!
 "not"					{return tk_not;}
-"of"				    {return tk_of ;}
 "or"				    {return tk_or ;}
 "procedure"				{return tk_procedure ;}
 "string"				{return tk_string ;}
 "then"				    {return tk_then ;}
 "type"				    {return tk_type ;}
 "true"				    {return tk_true;}
-"until"				    {return tk_until ;}
-"uses"				    {return tk_uses ;}
 "var"					{return tk_var ;}
 "while"				    {return tk_while ;}
 "boolean"               {return tk_boolean;}

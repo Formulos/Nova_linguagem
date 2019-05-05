@@ -3,7 +3,7 @@
 
 //identifier ds finds you letters and digits
 
-    <identifier> ::= <letter > {<letter or digit>}
+    <identifier> ::= <letter> {<letter or digit>}
 
         <letter or digit> ::= <letter> | <digit>
 
@@ -56,7 +56,7 @@
 
                             <assignment statement> ::= <variable> ":=" <expression> | <function identifier> := <expression>
 
-                                //variable canr be files or pointers(unlike normal pascal)
+                                //variable cant be files or pointers(unlike normal pascal)
                                 <variable> ::= <identifier>
                                 
                                 <function identifier> ::= <identifier>
