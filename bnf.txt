@@ -9,7 +9,7 @@
 
 //block: meat and bones
 
-    <block> ::= <type definition part> <variable declaration part> <procedure declaration part >
+    <block> ::= <type definition part> <variable declaration part> <procedure declaration part> <statement part>
 
     //type only need scalar type; no pointers , data structures and user definede
     // scalar type = int,floats,double...
@@ -42,3 +42,40 @@
                     function <parameter group> | procedure <identifier> { , <identifier>}
 
                         <parameter group> ::= <identifier> {, <identifier>} : <type identifier>
+
+        <statement part> ::= <compound statement>
+
+            <compound statement> ::= "begin" <statement> {; <statement> } "end";
+
+                //we dont have label (no go to here)
+                <statement> ::= <unlabelled statement>
+
+                    <unlabelled statement> ::= <simple statement> | <structured statement>
+
+                        <simple statement> ::= <assignment statement> | <procedure statement> |  <empty statement>
+
+                            <assignment statement> ::= <variable> ":=" <expression> | <function identifier> := <expression>
+
+                                //variable canr be files or pointers(unlike normal pascal)
+                                <variable> ::= <identifier>
+                                
+                                <function identifier> ::= <identifier>
+
+                                <expression> ::= <simple expression> | <simple expression> <relational operator> <simple expression>
+
+                                    <relational operator> ::= = | <> | < | <= | >= | > | in
+
+                                    <simple expression> ::= <term> | <sign> <term>| <simple expression> <adding operator> <term>
+
+                                        <adding operator> ::= + | - | or
+
+                                        <term> ::= <factor> | <term> <multiplying operator> <factor>
+
+                                            <factor> ::= <variable>  | ( <expression> ) | "not" <factor>
+
+                                        <multiplying operator> ::= * | / | div | mod | and
+
+                            
+                        <procedure statement> ::= <identifier> | <identifier> (<actual parameter> {, <actual parameter> })
+
+                            <actual parameter> ::= <expression> | <variable> | <identifier>
