@@ -1,11 +1,21 @@
 %{
+
+
 #include stdio.h
 #include stdlib.h
 extern int yylex();
 extern int yyparse();
+#ifdef YYDEBUG
+  yydebug = 1;
+#endif
 extern FILE* yyin;
 void yyerror(const char* s);
 %}
+
+%union {
+  int tk_int;
+  char *tk_id;
+}
 
 %token<int> tk_int
 %token<id> tk_id
@@ -53,117 +63,197 @@ void yyerror(const char* s);
 %token tk_dot
 %token tk_dot_dot
 
+%start program
+
+%%
 
 program : tk_program identifier tk_dot_comma block tk_dot tk_over tk_out 
         ;
 
-//identifier ds finds you letters and digits
 
-identifier : letter {letter_or_digit}
+identifier : tk_id 
+           letter_or_digit
+           ;
 
 letter_or_digit : tk_id 
                 | tk_int 
                 ;
 
-//block: meat and bones
 
-    block : type definition part variable declaration part procedure declaration part statement part
+    block : type_definition_part 
+          variable_declaration_part 
+          procedure_declaration_part 
+          statement_part
+          ;
 
-    //type only need scalar type; no pointers , data structures and user definede
-    // scalar type = int,floats,double...
+        type_definition_part : empty 
+                            | tk_type type_definition
+                            ;
 
-        type definition part : empty | "type" type definition {;type definition};
+            type_definition : identifier tk_equal type
+                            ;
 
-            type definition : identifier "=" type
+                type : simple_type
+                    ;
 
-                type : simple type
+                    simple_type : scalar_type 
+                                | type_identifier
+                                ;
 
-                    simple type : scalar type | type identifier
+                        type_identifier : identifier
+                                        ;
 
-                        type identifier : identifier
+                        scalar_type : tk_openbrac 
+                                    identifier 
+                                    tk_closebrac
+                                    ;
 
-                        scalar type : (identifier {,identifier})
+        variable_declaration_part : empty 
+                                | tk_var variable_declaration 
+                                ;
 
-        variable declaration part : empty | "var" variable declaration {; variable declaration} ;
+            variable_declaration : identifier tk_twopoints type
+                                ;
 
-            variable declaration : identifier {,identifier} ":" type
+        procedure_declaration_part : procedure_declaration
+                                    ;
 
-        //procedure equal function for my language purpose
-        procedure declaration part : procedure declaration
+            procedure_declaration : procedure_heading block
+                                    ;
 
-            procedure declaration : procedure heading block
+                procedure_heading : tk_procedure identifier tk_dot_comma |
+                                tk_procedure 
+                                identifier 
+                                tk_openbrac 
+                                formal_parameter_section  
+                                tk_closebrac
+                                tk_dot_comma
+                                ;
 
-                procedure heading : procedure identifier ";" |
-                procedure identifier ( formal parameter section {;formal parameter section} );
+                    formal_parameter_section : parameter_group 
+                                            | tk_var parameter_group 
+                                            | tk_procedure identifier
+                                            ;
 
-                    formal parameter section : parameter group | var parameter group |
-                    function parameter group | procedure identifier { , identifier}
+                        parameter_group : identifier tk_twopoints type_identifier
+                                        ;
 
-                        parameter group : identifier {, identifier} : type identifier
+        statement_part : compound_statement
+                       ;
 
-        statement part : compound statement
+            compound_statement : tk_begin statement tk_end tk_dot_comma 
+                               ;
 
-            compound statement : "begin" statement {; statement } "end";
+                statement : unlabelled_statement
 
-                //we dont have label (no go to here)
-                statement : unlabelled statement
+                    unlabelled_statement : simple_statement 
+                                        | structured_statement
+                                        ;
 
-                    unlabelled statement : simple statement | structured statement
+                        simple_statement : assignment_statement 
+                                         | procedure_statement 
+                                         | empty
+                                         ;
 
-                        simple statement : assignment statement | procedure statement |  empty
+                            assignment_statement : variable tk_assigment expression
+                                                 ;
 
-                            assignment statement : variable ":=" expression | function identifier := expression
-
-                                //variable cant be files or pointers(unlike normal pascal)
                                 variable : identifier
                                 
-                                function identifier : identifier
 
-                                expression : simple expression | simple expression relational operator simple expression
-                                    //does not have in
-                                    relational operator : "=" | "" | "" | "=" | "=" | ""
+                                expression : simple_expression 
+                                           | simple_expression relational_operator simple_expression
+                                           ;
 
-                                    simple expression : term | sign term| simple expression adding operator term
+                                    relational_operator : tk_equal 
+                                                        | tk_different
+                                                        | tk_smaller
+                                                        | tk_smaller_equal 
+                                                        | tk_greter_equal 
+                                                        | tk_bigger
+                                                        ;
 
-                                        sign : + | -
+                                    simple_expression : term 
+                                                      | sign term
+                                                      | simple_expression adding_operator term
+                                                      ;
 
-                                        adding operator : + | - | or
+                                        sign : tk_plus 
+                                             | tk_minus
+                                             ;
 
-                                        term : factor | term multiplying operator factor
+                                        adding_operator : tk_plus 
+                                                        | tk_minus 
+                                                        | tk_or
+                                                        ;
 
-                                            factor : variable  | ( expression ) | "not" factor
+                                        term : factor 
+                                             | term multiplying_operator factor
+                                             ;
 
-                                        multiplying operator : * | / | div | mod | and
+                                            factor : variable 
+                                                   | tk_openbrac expression tk_closebrac 
+                                                   | tk_not factor
+                                                   ;
+
+                                        multiplying_operator : tk_times 
+                                                             | tk_division 
+                                                             | tk_mod 
+                                                             | tk_and
+                                                             ;
 
                             
-                        procedure statement : identifier | identifier (actual parameter {, actual parameter })
+                        procedure_statement : identifier 
+                                            | identifier tk_openbrac actual_parameter tk_closebrac
+                                            ;
 
-                            actual parameter : expression | variable | identifier
+                            actual_parameter : expression 
+                                             | variable 
+                                             | identifier
+                                             ;
 
                         empty :
+                              ;
 
-                    structured statement : compound statement | conditional statement | repetitive statement
+                    structured_statement : compound_statement 
+                                         | conditional_statement 
+                                         | repetitive_statement
+                                         ;
 
-                        compound statement : "begin" statement {; statement } "end";
+                        compound_statement : tk_begin statement 
+                                           tk_end 
+                                           tk_dot_comma
+                                           ;
 
-                        conditional statement : if statement
+                        conditional_statement : if_statement
+                                              ;
 
-                            if statement : "if" expression "then" statement | "if" expression "then" statement "else" statement
+                            if_statement : tk_if expression tk_then statement 
+                                         | tk_if expression tk_then statement tk_else statement
+                                         ;
                         
-                        //does not have "reapeat" or "for"
-                        repetitive statement : while statement 
+                        repetitive_statement : while_statement
+                                             ; 
 
-                            while statement : "while" expression "do" statement
+                            while_statement : tk_while expression tk_do statement
+                                            ;
 
-int main() {
-	yyin = stdin;
-	do {
-		yyparse();
-	} while(!feof(yyin));
-	return 0;
+%%
+#include
+
+int yyparse(void);
+
+int main(void)
+{
+    # if YYDEBUG == 1
+    extern int yydebug;
+    yydebug = 1;
+    #endif
+
+    return yyparse();
 }
-void yyerror(const char* s) {
-	fprintf(stderr, "Parse error: %s\n", s);
-	exit(1);
-}
-                    
+
+void yyerror(char *error_message)
+{
+    fprintf(stderr, "Error: %s\nExiting\n", error_message);
+}              

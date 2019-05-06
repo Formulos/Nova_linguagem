@@ -40,7 +40,7 @@ extern "C" int yywrap() { }
 "/"						{return tk_division;}
 "%"						{return tk_mod;}
 
-"="						{return tk_equal;} 
+"="						{return tk_equal;}
 "("						{return tk_openbrac;}
 ")"						{return tk_closebrac;}
 "["						{return tk_openclasp;}
